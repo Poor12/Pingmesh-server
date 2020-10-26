@@ -1,10 +1,19 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pingmesh-server
+  namespace: kube-system
+---
 apiVersion: v1
 kind: Pod
 metadata:
  name: pingmesh-server
+ namespace: kube-system
  labels:
   name: pingmesh-server
 spec:
+ serviceAccountName: pingmesh-server
  containers:
  - name: pingmesh-server
    image: pingmesh-server:1.0
@@ -17,8 +26,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: pms-service
+  namespace: kube-system
 spec:
-  type: NodePort
   ports:
     - name: http
       port: 10009

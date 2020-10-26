@@ -20,6 +20,7 @@ func startHTTPServer() {
 		Addr:    addr,
 		Handler: router,
 	}
+	klog.Info("testing.........")
 	klog.Fatal(server.ListenAndServe())
 }
 

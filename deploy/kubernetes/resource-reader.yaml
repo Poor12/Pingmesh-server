@@ -1,0 +1,31 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:pingmesh-server
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - nodes
+      - nodes/stats
+      - namespaces
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:pingmesh-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:pingmesh-server
+subjects:
+  - kind: ServiceAccount
+    name: pingmesh-server
+    namespace: kube-system
