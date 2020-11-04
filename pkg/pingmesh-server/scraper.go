@@ -40,7 +40,7 @@ func (c *Scraper) Scrape(baseCtx context.Context) error {
 	klog.V(1).Infof("Scraping metrics from %v nodes", len(nodes))
 
 	c.storage.mu.Lock()
-	c.storage.nodesPatition = make(map[string][]string,0)
+	c.storage.nodesPatition = make(map[string][]string, 0)
 	c.storage.mu.Unlock()
 
 	for _, node := range nodes {
@@ -78,10 +78,10 @@ func (c *Scraper) Scrape(baseCtx context.Context) error {
 
 	waitGroup.Wait()
 
-	gstorage.mu.Lock()
-	gstorage.nodesPatition = c.storage.nodesPatition
-	gstorage.IPtoPatition = c.storage.IPtoPatition
-	gstorage.mu.Unlock()
+	//c.storage.mu.Lock()
+	//c.storage.nodesPatition = c.storage.nodesPatition
+	//gstorage.IPtoPatition = c.storage.IPtoPatition
+	//gstorage.mu.Unlock()
 
 	for range nodes {
 		err := <-errChannel

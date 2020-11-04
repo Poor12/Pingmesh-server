@@ -3,6 +3,7 @@ package pingmesh_server
 import (
 	"context"
 	"k8s.io/client-go/informers"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog/v2"
 	"sync"
@@ -10,8 +11,9 @@ import (
 )
 
 type PingmeshServer struct {
-	syncs    []cache.InformerSynced
-	informer informers.SharedInformerFactory
+	syncs      []cache.InformerSynced
+	informer   informers.SharedInformerFactory
+	kubeClient *kubernetes.Clientset
 
 	resolution    time.Duration
 	scraper       *Scraper
@@ -29,7 +31,16 @@ func (pm *PingmeshServer) RunUntil(stopCh <-chan struct{}) error {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	go startHTTPServer()
+	//NewMetrics()
+	go pm.startHTTPServer()
+	go pm.startMetrics()
+	go func() {
+		ctxAll, _ := context.WithCancel(context.Background())
+		err := pm.DataProcess(ctxAll)
+		if err != nil {
+			klog.Error("DataProcess failed")
+		}
+	}()
 	return pm.runScrape(ctx)
 }
 
